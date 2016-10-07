@@ -70,6 +70,9 @@ export function shouldHeaderUpdate(nextProps, nextState) {
 export function shouldRowUpdate(nextProps) {
     let result = true;
 
+    // until done with edit stuff
+    return true;
+
     // unique key created by setData action/reducer
     const key = nextProps.row._key;
 

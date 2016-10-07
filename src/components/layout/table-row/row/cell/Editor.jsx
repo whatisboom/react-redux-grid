@@ -24,9 +24,9 @@ export const Editor = ({
     }
 
     const value = editorState
-        && editorState.row
-        && editorState.row.values
-        ? editorState.row.values[colName]
+        && editorState[rowId]
+        && editorState[rowId].values
+        ? editorState[rowId].values[colName]
         : null;
 
     if (isEditable
@@ -34,7 +34,7 @@ export const Editor = ({
         && columns[index].editor
         && (columns[index].editable === undefined || columns[index].editable)
         && (typeof columns[index].editable === 'function'
-                ? columns[index].editable({ row: editorState.row, store })
+                ? columns[index].editable({ row: editorState[rowId], store })
                 : true)
         && typeof columns[index].editor === 'function') {
 
@@ -44,9 +44,9 @@ export const Editor = ({
                 columns,
                 store,
                 rowId,
-                row: editorState.row,
+                row: editorState[rowId] || { key: rowId },
                 columnIndex: index,
-                value: value,
+                value: value || cellData,
                 stateKey
             }
         );
@@ -60,7 +60,7 @@ export const Editor = ({
         && columns[index]
         && (columns[index].editable === undefined || columns[index].editable)
         && (typeof columns[index].editable === 'function'
-                ? columns[index].editable({ row: editorState.row, store })
+                ? columns[index].editable({ row: editorState[rowId], store })
                 : true)) {
         return (
             <span { ...{ className: wrapperCls } }>
@@ -69,8 +69,8 @@ export const Editor = ({
                             column: columns[index],
                             columns,
                             editorState,
-                            cellData,
                             rowId,
+                            cellData,
                             stateKey,
                             store
                         }

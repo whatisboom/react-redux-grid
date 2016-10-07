@@ -30,9 +30,10 @@ export const Cell = ({
     treeData
 }) => {
 
-    const isEditable = editorState
-            && editorState.row
-            && editorState.row.key === rowId;
+    const isEditable = (editorState
+            && editorState[rowId]
+            && editorState[rowId].key === rowId)
+        || editor.config.type === editor.editModes.grid;
 
     const isExpandable = treeData.expandable && !treeData.leaf;
 
@@ -124,7 +125,12 @@ export const Cell = ({
     );
 
     const handleContainer = dragHandle || arrow
-        ? <div { ...{ className: prefix(CLASS_NAMES.CELL_HANDNLE_CONTAINER) } }>{ dragHandle }{ arrow }</div>
+        ? (
+        <div
+            { ...{ className: prefix(CLASS_NAMES.CELL_HANDNLE_CONTAINER) } }
+        >
+            { dragHandle }{ arrow }
+        </div>)
         : null;
 
     return (

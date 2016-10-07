@@ -72,7 +72,7 @@ export const plugins = {
         enabled: true
     },
     EDITOR: {
-        type: 'inline',
+        type: 'grid',
         enabled: true,
         focusOnEdit: true
     },
@@ -142,7 +142,8 @@ export const editorFunc = (
             name: column.dataIndex,
             column,
             columns,
-            stateKey
+            stateKey,
+            rowId: row.key
         })
     );
 };
@@ -171,6 +172,7 @@ export const columns = [
             { column, columnIndex, row, stateKey, store, value }
             /* eslint-enable  react/prop-types */
         ) => {
+
             return (
                 <input
                     onChange= {

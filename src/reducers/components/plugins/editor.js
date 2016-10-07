@@ -79,8 +79,8 @@ export default function editor(state = initialState, action) {
 
         const { values } = action;
         const isValid = isRowValid(action.columns, values);
-        const iOverrides = state.getIn([stateKey, 'row', 'overrides'])
-            ? state.getIn([stateKey, 'row', 'overrides']).toJS()
+        const iOverrides = state.getIn([stateKey, action.rowId, 'overrides'])
+            ? state.getIn([stateKey, action.rowId, 'overrides']).toJS()
             : {};
 
         action.columns.forEach((col, i) => {
@@ -92,8 +92,12 @@ export default function editor(state = initialState, action) {
             iOverrides[dataIndex].disabled = setDisabled(col, val, values);
         });
 
-        return state.setIn([action.stateKey], fromJS({
-            row: {
+        const operation = action.editMode === 'inline'
+            ? 'setIn'
+            : 'mergeIn';
+
+        return state[operation]([action.stateKey], fromJS({
+            [action.rowId]: {
                 key: action.rowId,
                 values: action.values,
                 rowIndex: action.rowIndex,
@@ -106,12 +110,13 @@ export default function editor(state = initialState, action) {
         }));
 
     case ROW_VALUE_CHANGE:
+
         const { column, columns, value, stateKey } = action;
-        const previousValues = state.getIn([stateKey, 'row', 'values'])
-            ? state.getIn([stateKey, 'row', 'values']).toJS()
+        const previousValues = state.getIn([stateKey, action.rowId, 'values'])
+            ? state.getIn([stateKey, action.rowId, 'values']).toJS()
             : {};
-        const overrides = state.getIn([stateKey, 'row', 'overrides'])
-            ? state.getIn([stateKey, 'row', 'overrides']).toJS()
+        const overrides = state.getIn([stateKey, action.rowId, 'overrides'])
+            ? state.getIn([stateKey, action.rowId, 'overrides']).toJS()
             : {};
 
         let rowValues = setDataAtDataIndex(
@@ -140,9 +145,9 @@ export default function editor(state = initialState, action) {
 
         const valid = isRowValid(columns, rowValues);
 
-        state = state.mergeIn([action.stateKey, 'row'], {
+        state = state.mergeIn([action.stateKey, action.rowId], {
             values: rowValues,
-            previousValues: state.getIn([stateKey, 'row', 'values']),
+            previousValues: state.getIn([stateKey, action.rowId, 'values']),
             valid,
             overrides
         });
