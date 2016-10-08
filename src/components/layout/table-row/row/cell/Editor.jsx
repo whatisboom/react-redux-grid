@@ -10,6 +10,10 @@ export const Editor = ({
     cellData, columns, editorState, index, isEditable, rowId, stateKey, store
 }) => {
 
+    if (editorState[rowId]) {
+        editorState[rowId].key = rowId;
+    }
+
     let colName = columns
         && columns[index]
         ? nameFromDataIndex(columns[index])

@@ -136,6 +136,7 @@ export const plugins = {
 export const editorFunc = (
     value, row, column, columns, columnIndex, stateKey, reactEvent
 ) => {
+
     store.dispatch(
         Actions.EditorActions.updateCellValue({
             value: reactEvent.target.value,
