@@ -53,6 +53,8 @@ export class Row extends Component {
             addEmptyCells(row, columns);
         }
 
+        const isSelected = selectedRows ? selectedRows[id] : false;
+
         const cells = Object.keys(cellValues).map((k, i) => {
 
             const cellProps = {
@@ -73,6 +75,7 @@ export class Row extends Component {
                 showTreeRootNode,
                 stateful,
                 stateKey,
+                isRowSelected: isSelected,
                 store,
                 treeData: {
                     ...treeData,
@@ -89,8 +92,6 @@ export class Row extends Component {
                 />);
 
         });
-
-        const isSelected = selectedRows ? selectedRows[id] : false;
 
         const editClass = editorState
             && editorState.row

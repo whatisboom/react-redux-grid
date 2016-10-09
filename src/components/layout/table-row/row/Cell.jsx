@@ -18,15 +18,16 @@ export const Cell = ({
     events,
     gridType,
     index,
+    isRowSelected,
     readFunc,
     rowData,
-    rowIndex,
     rowId,
-    stateKey,
+    rowIndex,
     selectionModel,
-    stateful,
-    store,
     showTreeRootNode,
+    stateful,
+    stateKey,
+    store,
     treeData
 }) => {
 
@@ -117,6 +118,7 @@ export const Cell = ({
         cellData,
         editorState,
         isEditable,
+        isRowSelected,
         columns,
         index,
         rowId,
@@ -142,7 +144,15 @@ export const Cell = ({
 };
 
 export const getCellHTML = (
-    cellData, editorState, isEditable, columns, index, rowId, stateKey, store
+    cellData,
+    editorState,
+    isEditable,
+    isRowSelected,
+    columns,
+    index,
+    rowId,
+    stateKey,
+    store
 ) => {
 
     const editorProps = {
@@ -151,6 +161,7 @@ export const getCellHTML = (
         editorState,
         index,
         isEditable,
+        isRowSelected,
         rowId,
         store,
         stateKey
@@ -302,6 +313,7 @@ Cell.propTypes = {
         'tree', 'grid'
     ]),
     index: number,
+    isRowSelected: bool,
     readFunc: func,
     rowData: object,
     rowId: string,

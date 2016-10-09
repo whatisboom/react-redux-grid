@@ -7,7 +7,15 @@ import { nameFromDataIndex } from './../../../../../util/getData';
 const wrapperCls = prefix(CLASS_NAMES.EDITOR.INLINE.INPUT_WRAPPER);
 
 export const Editor = ({
-    cellData, columns, editorState, index, isEditable, rowId, stateKey, store
+    cellData,
+    columns,
+    editorState,
+    index,
+    isEditable,
+    isRowSelected,
+    rowId,
+    stateKey,
+    store
 }) => {
 
     if (editorState[rowId]) {
@@ -38,7 +46,9 @@ export const Editor = ({
         && columns[index].editor
         && (columns[index].editable === undefined || columns[index].editable)
         && (typeof columns[index].editable === 'function'
-                ? columns[index].editable({ row: editorState[rowId], store })
+                ? columns[index].editable({
+                    row: editorState[rowId], store, isRowSelected
+                })
                 : true)
         && typeof columns[index].editor === 'function') {
 
@@ -51,6 +61,7 @@ export const Editor = ({
                 row: editorState[rowId] || { key: rowId },
                 columnIndex: index,
                 value: value || cellData,
+                isRowSelected,
                 stateKey
             }
         );
@@ -97,9 +108,12 @@ Editor.propTypes = {
     editorState: PropTypes.object,
     index: PropTypes.number,
     isEditable: PropTypes.bool,
+    isRowSelected: PropTypes.bool,
     rowId: PropTypes.string,
     stateKey: PropTypes.string,
     store: PropTypes.object
 };
 
-Editor.defaultProps = {};
+Editor.defaultProps = {
+    isRowSelected: false
+};
