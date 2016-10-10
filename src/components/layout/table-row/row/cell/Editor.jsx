@@ -10,6 +10,7 @@ export const Editor = ({
     cellData,
     columns,
     editorState,
+    rawValue,
     index,
     isEditable,
     isRowSelected,
@@ -19,7 +20,7 @@ export const Editor = ({
 }) => {
 
     if (!editorState) {
-        return;
+        editorState = {};
     }
 
     if (!editorState[rowId]) {
@@ -68,7 +69,7 @@ export const Editor = ({
                 rowId,
                 row: editorState[rowId] || { key: rowId },
                 columnIndex: index,
-                value: value || cellData,
+                value: value !== undefined ? value : rawValue,
                 isRowSelected,
                 stateKey
             }
@@ -93,7 +94,7 @@ export const Editor = ({
                             columns,
                             editorState,
                             rowId,
-                            cellData,
+                            value: value !== undefined ? value : rawValue,
                             stateKey,
                             store
                         }

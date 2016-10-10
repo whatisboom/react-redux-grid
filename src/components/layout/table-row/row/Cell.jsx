@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 
 import { Editor } from './cell/Editor';
 import { prefix } from '../../../../util/prefix';
+import { getData } from './../../../../util/getData';
 import { handleEditClick } from './../../../../util/handleEditClick';
 import { elementContains } from './../../../../util/elementContains';
 import { CLASS_NAMES } from './../../../../constants/GridConstants';
@@ -122,6 +123,7 @@ export const Cell = ({
         columns,
         index,
         rowId,
+        rowData,
         stateKey,
         store
     );
@@ -151,9 +153,11 @@ export const getCellHTML = (
     columns,
     index,
     rowId,
+    rowData,
     stateKey,
     store
 ) => {
+    const rawValue = getData(rowData, columns, index);
 
     const editorProps = {
         cellData,
@@ -162,6 +166,7 @@ export const getCellHTML = (
         index,
         isEditable,
         isRowSelected,
+        rawValue,
         rowId,
         store,
         stateKey
@@ -205,9 +210,9 @@ export const handleClick = ({
     if (selectionModel.defaults.editEvent
         === selectionModel.eventTypes.singleclick) {
 
-
         // if a row is clicked and the editorState is empty except
         // for last update integer, trigger edit event
+
         if (!editorState || Object.keys(editorState).length === 1) {
             handleEditClick(
                 editor,
@@ -222,8 +227,7 @@ export const handleClick = ({
             );
         }
 
-        else if (editorState && editorState.row
-            && editorState.row.rowIndex !== rowIndex) {
+        else if (editorState && !editorState[rowId]) {
             handleEditClick(
                 editor,
                 store,
@@ -264,35 +268,39 @@ export const handleDoubleClick = ({
         reactEvent.stopPropagation();
     }
 
-    // if a row is clicked and the editorState is empty except
-    // for last update integer, trigger edit event
-    if (!editorState || Object.keys(editorState).length === 1) {
-        handleEditClick(
-            editor,
-            store,
-            rowId,
-            rowData,
-            rowIndex,
-            columns,
-            stateKey,
-            events,
-            { reactEvent }
-        );
-    }
+    if (selectionModel.defaults.editEvent
+    === selectionModel.eventTypes.doubleclick) {
 
-    else if (selectionModel.defaults.editEvent
-        === selectionModel.eventTypes.doubleclick) {
-        handleEditClick(
-            editor,
-            store,
-            rowId,
-            rowData,
-            rowIndex,
-            columns,
-            stateKey,
-            events,
-            { reactEvent }
-        );
+        // if a row is clicked and the editorState is empty except
+        // for last update integer, trigger edit event
+        if (!editorState || Object.keys(editorState).length === 1) {
+            handleEditClick(
+                editor,
+                store,
+                rowId,
+                rowData,
+                rowIndex,
+                columns,
+                stateKey,
+                events,
+                { reactEvent }
+            );
+        }
+
+        else if (editorState && !editorState[rowId]) {
+            handleEditClick(
+                editor,
+                store,
+                rowId,
+                rowData,
+                rowIndex,
+                columns,
+                stateKey,
+                events,
+                { reactEvent }
+            );
+        }
+
     }
 
     if (events.HANDLE_CELL_DOUBLE_CLICK) {

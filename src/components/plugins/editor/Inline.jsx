@@ -95,7 +95,7 @@ export class Inline extends Component {
         const { position } = this.state;
 
         resetEditorPosition.call(
-            this, editorState, store, stateKey, dom, position
+            this, editorState, store, stateKey, dom, position, editedRowKey
         );
 
         if (!config.focusOnEdit) {
@@ -137,7 +137,7 @@ export const getRowFromInput = (inputEl) => {
 };
 
 export function resetEditorPosition(
-    editorState, store, stateKey, dom, position
+    editorState, store, stateKey, dom, position, rowId
 ) {
 
     if (!dom) {
@@ -163,7 +163,8 @@ export function resetEditorPosition(
             if (top !== editorState[editedRowKey].top) {
                 store.dispatch(repositionEditor({
                     stateKey,
-                    top
+                    top,
+                    rowId
                 }));
             }
 

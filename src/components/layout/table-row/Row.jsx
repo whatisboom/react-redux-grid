@@ -265,7 +265,6 @@ export const getCellData = (columns, row, editor, key, index, store) => {
     if (row
         && columns[index]
         && columns[index].renderer
-        && editor.config.type !== 'grid'
         && typeof columns[index].renderer === 'function') {
         return columns[index].renderer({
             column: columns[index],

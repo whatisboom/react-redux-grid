@@ -25,12 +25,24 @@ var Editor = exports.Editor = function Editor(_ref) {
     var cellData = _ref.cellData;
     var columns = _ref.columns;
     var editorState = _ref.editorState;
+    var rawValue = _ref.rawValue;
     var index = _ref.index;
     var isEditable = _ref.isEditable;
+    var isRowSelected = _ref.isRowSelected;
     var rowId = _ref.rowId;
     var stateKey = _ref.stateKey;
     var store = _ref.store;
 
+
+    if (!editorState) {
+        editorState = {};
+    }
+
+    if (!editorState[rowId]) {
+        editorState[rowId] = {};
+    }
+
+    editorState[rowId].key = rowId;
 
     var colName = columns && columns[index] ? (0, _getData.nameFromDataIndex)(columns[index]) : '';
 
@@ -38,18 +50,25 @@ var Editor = exports.Editor = function Editor(_ref) {
         colName = columns && columns[index] && columns[index].name ? columns[index].name : '';
     }
 
-    var value = editorState && editorState.row && editorState.row.values ? editorState.row.values[colName] : null;
+    var value = editorState[rowId].values ? editorState[rowId].values[colName] : null;
 
-    if (isEditable && columns[index] && columns[index].editor && (columns[index].editable === undefined || columns[index].editable) && (typeof columns[index].editable === 'function' ? columns[index].editable({ row: editorState.row, store: store }) : true) && typeof columns[index].editor === 'function') {
+    var editableFuncArgs = {
+        row: editorState[rowId],
+        isRowSelected: isRowSelected,
+        store: store
+    };
+
+    if (isEditable && columns[index] && columns[index].editor && (columns[index].editable === undefined || columns[index].editable) && (typeof columns[index].editable === 'function' ? columns[index].editable(editableFuncArgs) : true) && typeof columns[index].editor === 'function') {
 
         var input = columns[index].editor({
             column: columns[index],
             columns: columns,
             store: store,
             rowId: rowId,
-            row: editorState.row,
+            row: editorState[rowId] || { key: rowId },
             columnIndex: index,
-            value: value,
+            value: value !== undefined ? value : rawValue,
+            isRowSelected: isRowSelected,
             stateKey: stateKey
         });
 
@@ -60,7 +79,7 @@ var Editor = exports.Editor = function Editor(_ref) {
             input,
             ' '
         );
-    } else if (isEditable && columns[index] && (columns[index].editable === undefined || columns[index].editable) && (typeof columns[index].editable === 'function' ? columns[index].editable({ row: editorState.row, store: store }) : true)) {
+    } else if (isEditable && columns[index] && (columns[index].editable === undefined || columns[index].editable) && (typeof columns[index].editable === 'function' ? columns[index].editable(editableFuncArgs) : true)) {
         return _react2.default.createElement(
             'span',
             { className: wrapperCls },
@@ -68,8 +87,8 @@ var Editor = exports.Editor = function Editor(_ref) {
                 column: columns[index],
                 columns: columns,
                 editorState: editorState,
-                cellData: cellData,
                 rowId: rowId,
+                value: value !== undefined ? value : rawValue,
                 stateKey: stateKey,
                 store: store
             })
@@ -89,9 +108,12 @@ Editor.propTypes = {
     editorState: _react.PropTypes.object,
     index: _react.PropTypes.number,
     isEditable: _react.PropTypes.bool,
+    isRowSelected: _react.PropTypes.bool,
     rowId: _react.PropTypes.string,
     stateKey: _react.PropTypes.string,
     store: _react.PropTypes.object
 };
 
-Editor.defaultProps = {};
+Editor.defaultProps = {
+    isRowSelected: false
+};
