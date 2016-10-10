@@ -144,6 +144,7 @@ var getCellHTML = exports.getCellHTML = function getCellHTML(cellData, editorSta
         index: index,
         isEditable: isEditable,
         isRowSelected: isRowSelected,
+        rowData: rowData,
         rawValue: rawValue,
         rowId: rowId,
         store: store,
@@ -214,12 +215,15 @@ var handleDoubleClick = exports.handleDoubleClick = function handleDoubleClick(_
         reactEvent.stopPropagation();
     }
 
-    // if a row is clicked and the editorState is empty except
-    // for last update integer, trigger edit event
-    if (!editorState || Object.keys(editorState).length === 1) {
-        (0, _handleEditClick.handleEditClick)(editor, store, rowId, rowData, rowIndex, columns, stateKey, events, { reactEvent: reactEvent });
-    } else if (selectionModel.defaults.editEvent === selectionModel.eventTypes.doubleclick) {
-        (0, _handleEditClick.handleEditClick)(editor, store, rowId, rowData, rowIndex, columns, stateKey, events, { reactEvent: reactEvent });
+    if (selectionModel.defaults.editEvent === selectionModel.eventTypes.doubleclick) {
+
+        // if a row is clicked and the editorState is empty except
+        // for last update integer, trigger edit event
+        if (!editorState || Object.keys(editorState).length === 1) {
+            (0, _handleEditClick.handleEditClick)(editor, store, rowId, rowData, rowIndex, columns, stateKey, events, { reactEvent: reactEvent });
+        } else if (editorState && !editorState[rowId]) {
+            (0, _handleEditClick.handleEditClick)(editor, store, rowId, rowData, rowIndex, columns, stateKey, events, { reactEvent: reactEvent });
+        }
     }
 
     if (events.HANDLE_CELL_DOUBLE_CLICK) {

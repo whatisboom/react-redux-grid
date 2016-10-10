@@ -166,6 +166,7 @@ export const getCellHTML = (
         index,
         isEditable,
         isRowSelected,
+        rowData,
         rawValue,
         rowId,
         store,

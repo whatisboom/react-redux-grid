@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Editor = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -28,6 +30,7 @@ var Editor = exports.Editor = function Editor(_ref) {
     var rawValue = _ref.rawValue;
     var index = _ref.index;
     var isEditable = _ref.isEditable;
+    var rowData = _ref.rowData;
     var isRowSelected = _ref.isRowSelected;
     var rowId = _ref.rowId;
     var stateKey = _ref.stateKey;
@@ -50,7 +53,7 @@ var Editor = exports.Editor = function Editor(_ref) {
         colName = columns && columns[index] && columns[index].name ? columns[index].name : '';
     }
 
-    var value = editorState[rowId].values ? editorState[rowId].values[colName] : null;
+    var value = editorState[rowId].values ? editorState[rowId].values[colName] : rawValue;
 
     var editableFuncArgs = {
         row: editorState[rowId],
@@ -65,9 +68,9 @@ var Editor = exports.Editor = function Editor(_ref) {
             columns: columns,
             store: store,
             rowId: rowId,
-            row: editorState[rowId] || { key: rowId },
+            row: editorState[rowId] && editorState[rowId].values ? editorState[rowId].values : _extends({ key: rowId }, rowData),
             columnIndex: index,
-            value: value !== undefined ? value : rawValue,
+            value: value,
             isRowSelected: isRowSelected,
             stateKey: stateKey
         });
@@ -88,7 +91,7 @@ var Editor = exports.Editor = function Editor(_ref) {
                 columns: columns,
                 editorState: editorState,
                 rowId: rowId,
-                value: value !== undefined ? value : rawValue,
+                cellData: value,
                 stateKey: stateKey,
                 store: store
             })
@@ -109,6 +112,7 @@ Editor.propTypes = {
     index: _react.PropTypes.number,
     isEditable: _react.PropTypes.bool,
     isRowSelected: _react.PropTypes.bool,
+    rawValue: _react.PropTypes.any,
     rowId: _react.PropTypes.string,
     stateKey: _react.PropTypes.string,
     store: _react.PropTypes.object

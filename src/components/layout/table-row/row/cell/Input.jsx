@@ -50,7 +50,7 @@ export const Input = ({
             handleChange(column, columns, rowId, stateKey, store, e);
         },
         type: 'text',
-        value: value,
+        value,
         placeholder
     };
 

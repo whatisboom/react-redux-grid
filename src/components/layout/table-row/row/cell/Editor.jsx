@@ -13,6 +13,7 @@ export const Editor = ({
     rawValue,
     index,
     isEditable,
+    rowData,
     isRowSelected,
     rowId,
     stateKey,
@@ -44,7 +45,7 @@ export const Editor = ({
 
     const value = editorState[rowId].values
         ? editorState[rowId].values[colName]
-        : null;
+        : rawValue;
 
     const editableFuncArgs = {
         row: editorState[rowId],
@@ -67,9 +68,11 @@ export const Editor = ({
                 columns,
                 store,
                 rowId,
-                row: editorState[rowId] || { key: rowId },
+                row: editorState[rowId] && editorState[rowId].values
+                    ? editorState[rowId].values
+                    : { key: rowId, ...rowData },
                 columnIndex: index,
-                value: value !== undefined ? value : rawValue,
+                value,
                 isRowSelected,
                 stateKey
             }
@@ -94,7 +97,7 @@ export const Editor = ({
                             columns,
                             editorState,
                             rowId,
-                            value: value !== undefined ? value : rawValue,
+                            cellData: value,
                             stateKey,
                             store
                         }
@@ -118,6 +121,7 @@ Editor.propTypes = {
     index: PropTypes.number,
     isEditable: PropTypes.bool,
     isRowSelected: PropTypes.bool,
+    rawValue: PropTypes.any,
     rowId: PropTypes.string,
     stateKey: PropTypes.string,
     store: PropTypes.object
