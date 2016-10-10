@@ -58,7 +58,7 @@ export class Row extends Component {
         const cells = Object.keys(cellValues).map((k, i) => {
 
             const cellProps = {
-                cellData: getCellData(columns, row, editor, k, i, store),
+                cellData: getCellData(columns, editor, editorState, row, k, i, store),
                 columns,
                 dragAndDrop,
                 editor,
@@ -256,9 +256,19 @@ export const addEmptyInsert = (cells, visibleColumns, plugins) => {
     return cells;
 };
 
-export const getCellData = (columns, row, editor, key, index, store) => {
+export const getCellData = (
+    columns, editor, editorState, row, key, index, store
+) => {
 
-    const valueAtDataIndex = getData(row, columns, index);
+    const rowId = row._key;
+
+    const editedValues = editorState
+        && editorState[rowId]
+        && editorState[rowId].values
+        ? editorState[rowId].values
+        : {};
+
+    const valueAtDataIndex = getData(row, columns, index, editedValues);
 
     // if a render has been provided, default to this
     // as long as editor type isnt 'grid'

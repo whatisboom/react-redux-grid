@@ -104,7 +104,7 @@ var Row = exports.Row = function (_Component) {
             var cells = Object.keys(cellValues).map(function (k, i) {
 
                 var cellProps = {
-                    cellData: getCellData(columns, row, editor, k, i, store),
+                    cellData: getCellData(columns, editor, editorState, row, k, i, store),
                     columns: columns,
                     dragAndDrop: dragAndDrop,
                     editor: editor,
@@ -286,9 +286,13 @@ var addEmptyInsert = exports.addEmptyInsert = function addEmptyInsert(cells, vis
     return cells;
 };
 
-var getCellData = exports.getCellData = function getCellData(columns, row, editor, key, index, store) {
+var getCellData = exports.getCellData = function getCellData(columns, editor, editorState, row, key, index, store) {
 
-    var valueAtDataIndex = (0, _getData.getData)(row, columns, index);
+    var rowId = row._key;
+
+    var editedValues = editorState && editorState[rowId] && editorState[rowId].values ? editorState[rowId].values : {};
+
+    var valueAtDataIndex = (0, _getData.getData)(row, columns, index, editedValues);
 
     // if a render has been provided, default to this
     // as long as editor type isnt 'grid'

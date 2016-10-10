@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.Editor = undefined;
+exports.cleanProps = exports.Editor = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -68,7 +68,7 @@ var Editor = exports.Editor = function Editor(_ref) {
             columns: columns,
             store: store,
             rowId: rowId,
-            row: editorState[rowId] && editorState[rowId].values ? editorState[rowId].values : _extends({ key: rowId }, rowData),
+            row: editorState[rowId] && editorState[rowId].values ? _extends({}, rowData, cleanProps(editorState[rowId].values)) : _extends({ key: rowId }, rowData),
             columnIndex: index,
             value: value,
             isRowSelected: isRowSelected,
@@ -103,6 +103,15 @@ var Editor = exports.Editor = function Editor(_ref) {
         { className: (0, _prefix.prefix)(_GridConstants.CLASS_NAMES.INACTIVE_CLASS) },
         cellData
     );
+};
+
+var cleanProps = exports.cleanProps = function cleanProps() {
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    Object.keys(obj).forEach(function (k) {
+        return obj[k] === undefined && delete obj[k];
+    });
+    return obj;
 };
 
 Editor.propTypes = {

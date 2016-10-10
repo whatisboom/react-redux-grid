@@ -69,7 +69,7 @@ export const Editor = ({
                 store,
                 rowId,
                 row: editorState[rowId] && editorState[rowId].values
-                    ? editorState[rowId].values
+                    ? { ...rowData, ...cleanProps(editorState[rowId].values) }
                     : { key: rowId, ...rowData },
                 columnIndex: index,
                 value,
@@ -112,6 +112,11 @@ export const Editor = ({
             { cellData }
         </span>
         );
+};
+
+export const cleanProps = (obj = {}) => {
+    Object.keys(obj).forEach(k => obj[k] === undefined && delete obj[k]);
+    return obj;
 };
 
 Editor.propTypes = {
