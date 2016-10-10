@@ -158,17 +158,13 @@ export default function editor(state = initialState, action) {
         );
 
     case REPOSITION_EDITOR:
-
-        const row = state.mergeIn([action.stateKey, 'row'], {
+        const newState = state.mergeIn([action.stateKey, action.rowId], {
             top: action.top
-        }).getIn([action.stateKey, 'row']);
+        });
 
-        return state.mergeIn(
+        return newState.mergeIn(
             [action.stateKey],
-            fromJS({
-                row: row,
-                lastUpdate: generateLastUpdate()
-            })
+            { lastUpdate: generateLastUpdate() }
         );
 
     case REMOVE_ROW:

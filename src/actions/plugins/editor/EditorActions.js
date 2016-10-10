@@ -23,6 +23,11 @@ export function editRow({
     stateKey,
     editMode = 'inline'
 }) {
+
+    if (!rowId) {
+        throw new Error('rowId is a required parameter for editRow Action');
+    }
+
     return {
         type: EDIT_ROW,
         rowId,
@@ -36,9 +41,10 @@ export function editRow({
     };
 }
 
-export function repositionEditor({ top, stateKey }) {
+export function repositionEditor({ top, stateKey, rowId }) {
     return {
         type: REPOSITION_EDITOR,
+        rowId,
         stateKey,
         top
     };

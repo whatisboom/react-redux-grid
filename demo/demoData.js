@@ -166,6 +166,9 @@ export const columns = [
     {
         name: 'Phone Number',
         dataIndex: 'Phone Number',
+        editable: ({ isRowSelected }) => {
+            return isRowSelected;
+        },
         sortable: true,
         className: 'additional-class',
         editor: (

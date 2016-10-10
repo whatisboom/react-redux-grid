@@ -94,8 +94,8 @@ export class Row extends Component {
         });
 
         const editClass = editorState
-            && editorState.row
-            && editorState.row.key === id
+            && editorState[id]
+            && editor.config.type !== 'grid'
             ? selectionModel.defaults.editCls
             : '';
 
@@ -317,9 +317,7 @@ export const handleRowDoubleClickEvent = (
 ) => {
     if (selectionModel
             && selectionModel.defaults.selectionEvent
-                === selectionModel.eventTypes.doubleclick
-            && selectionModel.defaults.editEvent
-                !== selectionModel.eventTypes.doubleclick) {
+                === selectionModel.eventTypes.doubleclick) {
 
         selectionModel.handleSelectionEvent({
             eventType: reactEvent.type,
@@ -374,9 +372,7 @@ export const handleRowSingleClickEvent = (
 
     if (selectionModel
             && selectionModel.defaults.selectionEvent
-                === selectionModel.eventTypes.singleclick
-            && selectionModel.defaults.editEvent
-                !== selectionModel.eventTypes.singleclick) {
+                === selectionModel.eventTypes.singleclick) {
 
         selectionModel.handleSelectionEvent({
             eventType: reactEvent.type,

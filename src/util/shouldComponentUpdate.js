@@ -70,9 +70,6 @@ export function shouldHeaderUpdate(nextProps, nextState) {
 export function shouldRowUpdate(nextProps) {
     let result = true;
 
-    // until done with edit stuff
-    return true;
-
     // unique key created by setData action/reducer
     const key = nextProps.row._key;
 
@@ -82,16 +79,15 @@ export function shouldRowUpdate(nextProps) {
 
     const isEdited = editorState => Boolean(
         editorState
-        && editorState.row
-        && editorState.row.rowIndex === nextProps.index
-        && editorState.row.values
+        && editorState[key]
+        && editorState[key].values
     );
 
     const limitedNextProps = {
         columns: slimColumn(nextProps.columns),
         isEdited: isEdited(nextProps.editorState),
         currentValues: isEdited(nextProps.editorState)
-            ? nextProps.editorState
+            ? nextProps.editorState[key]
             : null,
         isMenuShown: isMenuShown(nextProps.menuState),
         row: nextProps.row,
@@ -103,8 +99,8 @@ export function shouldRowUpdate(nextProps) {
     const limitedProps = {
         columns: this.previousColumns,
         isEdited: isEdited(this.props.editorState),
-        currentValues: isEdited(nextProps.editorState)
-            ? this.props.editorState
+        currentValues: isEdited(this.props.editorState)
+            ? this.props.editorState[key]
             : null,
         isMenuShown: isMenuShown(this.props.menuState),
         row: this.props.row,

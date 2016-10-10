@@ -186,8 +186,10 @@ export function resetEditorPosition(
 
 }
 
-export const getEditedRowKey = editorState => Object.keys(editorState)
-    .find(k => k !== 'lastUpdate');
+export const getEditedRowKey = editorState => editorState
+    ? Object.keys(editorState)
+        .find(k => k !== 'lastUpdate')
+    : null;
 
 export const focusFirstEditor = (dom) => {
     const input = dom.parentNode.querySelector(INPUT_SELECTOR);

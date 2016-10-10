@@ -205,6 +205,7 @@ export const handleClick = ({
     if (selectionModel.defaults.editEvent
         === selectionModel.eventTypes.singleclick) {
 
+
         // if a row is clicked and the editorState is empty except
         // for last update integer, trigger edit event
         if (!editorState || Object.keys(editorState).length === 1) {
