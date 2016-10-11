@@ -303,8 +303,11 @@ var Grid = function (_Component) {
             var expandOnLoad = _props3.expandOnLoad;
             var showTreeRootNode = _props3.showTreeRootNode;
             var stateKey = _props3.stateKey;
+            var plugins = _props3.plugins;
             var store = _props3.store;
 
+
+            var editMode = (0, _isPluginEnabled.isPluginEnabled)(plugins, 'EDITOR') ? plugins.EDITOR.type : null;
 
             if (this.gridType === 'tree') {
                 if (typeof dataSource === 'string' || typeof dataSource === 'function') {
@@ -314,7 +317,8 @@ var Grid = function (_Component) {
                         type: 'tree',
                         showTreeRootNode: showTreeRootNode,
                         extraParams: _extends({}, extraParams, {
-                            expandOnLoad: expandOnLoad
+                            expandOnLoad: expandOnLoad,
+                            editMode: editMode
                         })
                     }));
                 } else {
@@ -323,15 +327,20 @@ var Grid = function (_Component) {
                         data: data,
                         showTreeRootNode: showTreeRootNode,
                         extraParams: _extends({}, extraParams, {
-                            expandOnLoad: expandOnLoad
+                            expandOnLoad: expandOnLoad,
+                            editMode: editMode
                         })
                     }));
                 }
             } else if (this.gridType === 'grid') {
                 if (typeof dataSource === 'string' || typeof dataSource === 'function') {
-                    store.dispatch((0, _GridActions.getAsyncData)({ stateKey: stateKey, dataSource: dataSource, extraParams: extraParams }));
+                    store.dispatch((0, _GridActions.getAsyncData)({
+                        stateKey: stateKey,
+                        dataSource: dataSource,
+                        extraParams: _extends({}, extraParams, { editMode: editMode })
+                    }));
                 } else if (data) {
-                    store.dispatch((0, _GridActions.setData)({ stateKey: stateKey, data: data }));
+                    store.dispatch((0, _GridActions.setData)({ stateKey: stateKey, data: data, editMode: editMode }));
                 } else {
                     throw new Error('A data source, or a static data set is required');
                 }

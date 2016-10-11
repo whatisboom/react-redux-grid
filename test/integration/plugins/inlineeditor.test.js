@@ -2,6 +2,7 @@
 import React from 'react';
 import expect from 'expect';
 import { mount } from 'enzyme';
+import { fromJS } from 'immutable';
 import { ConnectedGrid } from './../../../src/components/Grid.jsx';
 import { Store as GridStore } from './../../../src/store/store';
 
@@ -55,6 +56,82 @@ describe('Integration Test for Inline Editor', () => {
             expect(
                 editor.props().className
             ).toContain('react-grid-shown');
+            done();
+        }, 100);
+
+    });
+
+    it('Should should not set editor state on init', (done) => {
+
+        const editorStateProps = {
+            ...editorProps,
+            stateKey: 'grid-type-inline'
+        };
+
+        const cmp = mount(<ConnectedGrid { ...editorStateProps } />);
+
+        setTimeout(() => {
+
+            expect(editorStateProps.store.getState().editor.get('grid-type-inline'))
+                .toEqual(undefined);
+
+            done();
+        }, 100);
+
+
+    });
+
+    it('Should should set editor state on init if editor type is grid', (done) => {
+
+        const editorTypeGrid = {
+            ...editorProps,
+            plugins: {
+                EDITOR: {
+                    enabled: true,
+                    type: 'grid'
+                },
+                SELECTION_MODEL: {
+                    editEvent: 'singleclick'
+                }
+            },
+            stateKey: 'grid-type-grid'
+        };
+
+        const cmp = mount(<ConnectedGrid { ...editorTypeGrid } />);
+
+        setTimeout(() => {
+
+            expect(editorTypeGrid.store.getState().editor.get('grid-type-grid'))
+                .toEqual(fromJS({
+                    lastUpdate: 55,
+                    'row-1': {
+                        key: 'row-1',
+                        values: {
+                            name: 'Charles Barkley',
+                            position: 'Power Forward',
+                            _key: 'row-1'
+                        },
+                        rowIndex: 0,
+                        top: null,
+                        valid: null,
+                        isCreate: false,
+                        overrides: {}
+                    },
+                    'row-0': {
+                        key: 'row-0',
+                        values: {
+                            name: 'Michael Jordan',
+                            position: 'Shooting Guard',
+                            _key: 'row-0'
+                        },
+                        rowIndex: 1,
+                        top: null,
+                        valid: null,
+                        isCreate: false,
+                        overrides: {}
+                    }
+                }));
+
             done();
         }, 100);
 

@@ -117,6 +117,34 @@ function editor() {
                     }), _defineProperty(_fromJS, 'lastUpdate', (0, _lastUpdate.generateLastUpdate)()), _fromJS)))
                 };
 
+            case _ActionTypes.SET_DATA:
+
+                // if grid editor is type 'grid', we need to map the datasource
+                // to editor state
+                if (action.editMode === 'grid') {
+
+                    var dataWithKeys = (0, _getData.setKeysInData)(action.data);
+                    var editorData = dataWithKeys.reduce(function (prev, curr, i) {
+                        return prev.set(curr.get('_key'), (0, _immutable.fromJS)({
+                            key: curr.get('_key'),
+                            values: curr,
+                            rowIndex: i,
+                            top: null,
+                            valid: null,
+                            isCreate: false,
+                            overrides: {}
+                        }));
+                    }, (0, _immutable.Map)({ lastUpdate: (0, _lastUpdate.generateLastUpdate)() }));
+
+                    return {
+                        v: state.mergeIn([action.stateKey], editorData)
+                    };
+                }
+
+                return {
+                    v: state
+                };
+
             case _ActionTypes.ROW_VALUE_CHANGE:
                 var column = action.column;
                 var columns = action.columns;

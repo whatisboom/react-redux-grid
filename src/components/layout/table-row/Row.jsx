@@ -262,6 +262,9 @@ export const getCellData = (
 
     const rowId = row._key;
 
+    // if a renderer is present, but
+    // were in edited mode, we should use the edited values
+    // since those could be modified using a 'change' function
     const editedValues = editorState
         && editorState[rowId]
         && editorState[rowId].values

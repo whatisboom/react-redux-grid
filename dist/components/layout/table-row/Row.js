@@ -290,6 +290,9 @@ var getCellData = exports.getCellData = function getCellData(columns, editor, ed
 
     var rowId = row._key;
 
+    // if a renderer is present, but
+    // were in edited mode, we should use the edited values
+    // since those could be modified using a 'change' function
     var editedValues = editorState && editorState[rowId] && editorState[rowId].values ? editorState[rowId].values : {};
 
     var valueAtDataIndex = (0, _getData.getData)(row, columns, index, editedValues);

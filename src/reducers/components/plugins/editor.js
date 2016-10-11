@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import {
     EDIT_ROW,
@@ -6,12 +6,14 @@ import {
     ROW_VALUE_CHANGE,
     CANCEL_ROW,
     REMOVE_ROW,
-    REPOSITION_EDITOR
+    REPOSITION_EDITOR,
+    SET_DATA
 } from '../../../constants/ActionTypes';
 
 import {
     getData,
-    setDataAtDataIndex
+    setDataAtDataIndex,
+    setKeysInData
 } from './../../../util/getData';
 
 import { generateLastUpdate } from './../../../util/lastUpdate';
@@ -108,6 +110,30 @@ export default function editor(state = initialState, action) {
             },
             lastUpdate: generateLastUpdate()
         }));
+
+    case SET_DATA:
+
+        // if grid editor is type 'grid', we need to map the datasource
+        // to editor state
+        if (action.editMode === 'grid') {
+
+            const dataWithKeys = setKeysInData(action.data);
+            const editorData = dataWithKeys.reduce((prev, curr, i) => {
+                return prev.set(curr.get('_key'), fromJS({
+                    key: curr.get('_key'),
+                    values: curr,
+                    rowIndex: i,
+                    top: null,
+                    valid: null,
+                    isCreate: false,
+                    overrides: {}
+                }));
+            }, Map({ lastUpdate: generateLastUpdate() }));
+
+            return state.mergeIn([action.stateKey], editorData);
+        }
+
+        return state;
 
     case ROW_VALUE_CHANGE:
 
