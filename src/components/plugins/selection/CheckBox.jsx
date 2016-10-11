@@ -2,7 +2,9 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { prefix } from '../../../util/prefix';
 import { stateGetter } from '../../../util/stateGetter';
-import { CLASS_NAMES } from '../../../constants/GridConstants';
+import {
+    CLASS_NAMES, SELECTION_MODES
+ } from '../../../constants/GridConstants';
 import {
     selectAll, deselectAll
 } from '../../../actions/plugins/selection/ModelActions';
@@ -23,7 +25,11 @@ export const CheckBox = ({
 }) => {
 
     const checkBoxContainerProps = {
-        className: prefix(CLASS_NAMES.SELECTION_MODEL.CHECKBOX_CONTAINER)
+        className: prefix(CLASS_NAMES.SELECTION_MODEL.CHECKBOX_CONTAINER,
+            type === 'header' && selectionModelConfig.mode === SELECTION_MODES.checkboxSingle
+                ? 'hidden'
+                : ''
+        )
     };
 
     const checkBoxProps = {
